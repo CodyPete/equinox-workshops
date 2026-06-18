@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Workshops — Equinox Bishopsgate</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 36px 24px 20px;
+      border-bottom: 1px solid #1e1e1e;
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      letter-spacing: 4px;
+      color: #888;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      line-height: 1.15;
+    }
+
+    .subheading {
+      font-size: 9px;
+      color: #555;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 8px;
+    }
+
+    .events {
+      padding: 0;
+    }
+
+    .event-card {
+      padding: 20px 24px;
+      border-bottom: 1px solid #1a1a1a;
+      text-decoration: none;
+      display: block;
+      transition: background 0.15s ease;
+    }
+
+    .event-card:hover {
+      background: #0d0d0d;
+    }
+
+    .event-card.sold-out {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .event-date {
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      color: #aaa;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .event-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .event-meta {
+      font-size: 10px;
+      color: #888;
+      margin-top: 3px;
+    }
+
+    .event-desc {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 8px;
+      line-height: 1.6;
+    }
+
+    .event-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 14px;
+    }
+
+    .event-spots {
+      font-size: 9px;
+      color: #888;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .event-spots.sold {
+      color: #cc4444;
+    }
+
+    .rsvp-btn {
+      background: #fff;
+      color: #000;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 8px 16px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .rsvp-btn.disabled {
+      background: transparent;
+      color: #444;
+      border: 1px solid #2a2a2a;
+      cursor: default;
+    }
+
+    /* Modal overlay */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #111;
+      width: 100%;
+      max-width: 480px;
+      border-top: 1px solid #2a2a2a;
+      padding: 28px 24px 40px;
+    }
+
+    .modal-close {
+      float: right;
+      background: none;
+      border: none;
+      color: #666;
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+      margin-top: -4px;
+    }
+
+    .modal-event-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .modal-event-date {
+      font-size: 9px;
+      color: #888;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: #888;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: #000;
+      border: 1px solid #2a2a2a;
+      color: #fff;
+      font-size: 14px;
+      padding: 12px 14px;
+      margin-bottom: 16px;
+      outline: none;
+      font-family: inherit;
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+
+    .form-input:focus {
+      border-color: #fff;
+    }
+
+    .form-submit {
+      width: 100%;
+      background: #fff;
+      color: #000;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      padding: 14px;
+      border: none;
+      cursor: pointer;
+      margin-top: 4px;
+    }
+
+    .form-submit:active {
+      background: #ddd;
+    }
+
+    footer {
+      padding: 32px 24px;
+      text-align: center;
+      font-size: 9px;
+      color: #333;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="eyebrow">Equinox Bishopsgate</div>
+    <h1>Upcoming<br>Workshops</h1>
+    <div class="subheading">Tap an event to reserve your spot</div>
+  </header>
+
+  <div class="events" id="events-list">
+    <!-- Events are defined in the EVENTS array below — edit that to update the page -->
+  </div>
+
+  <!-- RSVP Modal -->
+  <div class="modal-overlay" id="modal" onclick="closeModal(event)">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModalBtn()">✕</button>
+      <div class="modal-event-name" id="modal-event-name"></div>
+      <div class="modal-event-date" id="modal-event-date"></div>
+
+      <label class="form-label" for="input-name">Your name</label>
+      <input class="form-input" type="text" id="input-name" placeholder="First and last name" autocomplete="name" />
+
+      <label class="form-label" for="input-email">Email address</label>
+      <input class="form-input" type="email" id="input-email" placeholder="your@email.com" autocomplete="email" />
+
+      <button class="form-submit" onclick="submitRSVP()">Confirm RSVP →</button>
+    </div>
+  </div>
+
+  <footer>Equinox Bishopsgate · Personal Training</footer>
+
+  <script>
+    // ─────────────────────────────────────────────
+    // EDIT YOUR EVENTS HERE
+    // To add/remove events, update this array.
+    // For each event:
+    //   googleFormUrl: paste the Google Form link for that event
+    //   spotsLeft: set to 0 to mark as Fully Booked
+    // ─────────────────────────────────────────────
+    const EVENTS = [
+      {
+        name: "Strength & Mobility",
+        date: "Sun 22 Jun · 10:00am",
+        duration: "45 min",
+        trainer: "Peter V.",
+        description: "Build functional strength and improve range of motion for everyday performance.",
+        spotsTotal: 12,
+        spotsLeft: 8,
+        googleFormUrl: "https://forms.gle/REPLACE_WITH_YOUR_FORM_LINK_1"
+      },
+      {
+        name: "Nutrition Workshop",
+        date: "Wed 25 Jun · 6:30pm",
+        duration: "60 min",
+        trainer: "Sarah T.",
+        description: "Fuelling strategies for performance, recovery, and body composition goals.",
+        spotsTotal: 10,
+        spotsLeft: 3,
+        googleFormUrl: "https://forms.gle/REPLACE_WITH_YOUR_FORM_LINK_2"
+      },
+      {
+        name: "Running Masterclass",
+        date: "Sat 28 Jun · 9:00am",
+        duration: "90 min",
+        trainer: "James A.",
+        description: "Technique, pacing, and programming for distance runners of all levels.",
+        spotsTotal: 15,
+        spotsLeft: 0,
+        googleFormUrl: ""
+      }
+    ];
+    // ─────────────────────────────────────────────
+
+    let currentEvent = null;
+
+    function renderEvents() {
+      const container = document.getElementById("events-list");
+      container.innerHTML = EVENTS.map((e, i) => {
+        const soldOut = e.spotsLeft === 0;
+        return `
+          <div class="event-card${soldOut ? " sold-out" : ""}" ${!soldOut ? `onclick="openModal(${i})"` : ""}>
+            <div class="event-date">${e.date}</div>
+            <div class="event-name">${e.name}</div>
+            <div class="event-meta">${e.duration} · with ${e.trainer}</div>
+            <div class="event-desc">${e.description}</div>
+            <div class="event-footer">
+              <div class="event-spots${soldOut ? " sold" : ""}">
+                ${soldOut ? "Fully booked" : `${e.spotsLeft} / ${e.spotsTotal} spots left`}
+              </div>
+              <div class="rsvp-btn${soldOut ? " disabled" : ""}">
+                ${soldOut ? "Full" : "RSVP →"}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function openModal(index) {
+      currentEvent = EVENTS[index];
+      document.getElementById("modal-event-name").textContent = currentEvent.name;
+      document.getElementById("modal-event-date").textContent = currentEvent.date + " · " + currentEvent.duration;
+      document.getElementById("input-name").value = "";
+      document.getElementById("input-email").value = "";
+      document.getElementById("modal").classList.add("active");
+    }
+
+    function closeModalBtn() {
+      document.getElementById("modal").classList.remove("active");
+    }
+
+    function closeModal(e) {
+      if (e.target === document.getElementById("modal")) closeModalBtn();
+    }
+
+    function submitRSVP() {
+      const name = document.getElementById("input-name").value.trim();
+      const email = document.getElementById("input-email").value.trim();
+
+      if (!name || !email) {
+        alert("Please enter your name and email.");
+        return;
+      }
+
+      // Opens the Google Form for this event
+      // The name and email are passed as pre-filled URL params if your form uses them
+      if (currentEvent && currentEvent.googleFormUrl) {
+        const url = new URL(currentEvent.googleFormUrl);
+        // Optional: pre-fill form fields — update the entry IDs to match your Google Form
+        // url.searchParams.set("entry.123456789", name);
+        // url.searchParams.set("entry.987654321", email);
+        window.open(url.toString(), "_blank");
+      }
+
+      closeModalBtn();
+    }
+
+    renderEvents();
+  </script>
+
+</body>
+</html>
